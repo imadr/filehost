@@ -1,0 +1,117 @@
+:focus{
+    outline: none;
+    box-shadow: 0 0 0 4px #00b0f4;
+}
+input:invalid{
+    outline: none;
+    box-shadow: 0 0 0 4px red !important;
+}
+@font-face {
+    font-family: OpenSans;
+    font-weight: normal;
+    src: url(OpenSans-Regular.ttf);
+}
+@font-face {
+    font-family: OpenSans;
+    font-weight: bold;
+    src: url(OpenSans-Bold.ttf);
+}
+a{
+    color: #0064ff;
+}
+body, html{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+body{
+    background-color: rgb(255, 255, 255);
+    font-family: OpenSans;
+}
+#container{
+    width: 45vw;
+    min-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+}
+#files{
+    margin-top: 30px;
+}
+.file-line{
+    margin-bottom: 10px;
+}
+.file-progress{
+    float: right;
+}
+#url{
+    margin-top: 25px;
+    width: 100%;
+    display: flex;
+}
+button{
+    background: rgb(248, 248, 248);
+    border: 1px solid #fff;
+    padding: 3px 10px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(200, 200, 200), 0 1px 0 1px rgb(200, 200, 200);
+    display: inline-flex;
+    flex-direction: row;
+    align-items: baseline;
+    cursor: pointer;
+}
+input{
+    border: none;
+    border-bottom: 3px solid rgb(200, 200, 200);
+    flex-grow: 1;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+#drop{
+    font-weight: bold;
+    background-color: rgb(248, 248, 248);
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    border: 5px dashed rgb(200, 200, 200);
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+}
+#drop *{
+    vertical-align: middle;
+}
+#drop-inside{
+    display: inline-block;
+    color: rgb(120, 120, 120);
+    font-size: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+.progress{
+    background-color: rgb(230, 230, 230);
+    width: 200px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.progress-value{
+    height: 100%;
+    background-color: rgb(150, 150, 150);
+    width: 0%;
+}
+.filename{
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    max-width: 200px;
+    vertical-align: bottom;
+}
+.error{
+    color: red;
+}
