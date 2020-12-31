@@ -31,6 +31,7 @@ var (
 	port       = "8080"
 	filesDir   = "files"
 	torrentDir = "torrent_tmp"
+	https      = true
 )
 
 var maxIDRetries = 5000
@@ -96,7 +97,12 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "http://"+r.Host+"/"+filename)
+	prefix := "http"
+	if https {
+		prefix += "s"
+	}
+
+	fmt.Fprintf(w, prefix+"://"+r.Host+"/"+filename)
 }
 
 func saveFile(file io.Reader, filename string) (string, error) {
@@ -221,7 +227,12 @@ func downloadFromUrl(input Input, ws *websocket.Conn, r *http.Request) (string, 
 
 	done <- true
 
-	return fmt.Sprintf(`{"id": %d, "url": "http://`+r.Host+`/`+savename+`", "size": %d, "name": "%s"}`,
+	prefix := "http"
+	if https {
+		prefix += "s"
+	}
+
+	return fmt.Sprintf(`{"id": %d, "url": "`+prefix+`://`+r.Host+`/`+savename+`", "size": %d, "name": "%s"}`,
 		input.ID, size, inputName), nil
 }
 
@@ -363,7 +374,12 @@ func downloadFromMagnet(input Input, ws *websocket.Conn, r *http.Request) (strin
 		return "", err
 	}
 
-	return fmt.Sprintf(`{"id": %d, "url": "http://`+r.Host+`/`+savename+`.tar", "size": %d, "name": "%s.tar"}`,
+	prefix := "http"
+	if https {
+		prefix += "s"
+	}
+
+	return fmt.Sprintf(`{"id": %d, "url": "`+prefix+`://`+r.Host+`/`+savename+`.tar", "size": %d, "name": "%s.tar"}`,
 		input.ID, torrentSize, savename), nil
 }
 
@@ -458,9 +474,17 @@ func main() {
 	http.HandleFunc("/upload", uploadHandler)
 	http.HandleFunc("/fromurl", fromURLHandler)
 
-	log.Printf("Serving http on %v:%v\n", ip, port)
-	err = http.ListenAndServe(ip+":"+port, nil)
-	if err != nil {
-		log.Fatalf("Error serving http at %v:%v : %v", ip, port, err)
+	if https {
+		log.Printf("Serving https on %v:%v\n", ip, port)
+		err = http.ListenAndServeTLS(ip+":"+port, "../cert", "../key", nil)
+		if err != nil {
+			log.Fatalf("Error serving https at %v:%v : %v", ip, port, err)
+		}
+	} else {
+		log.Printf("Serving http on %v:%v\n", ip, port)
+		err = http.ListenAndServe(ip+":"+port, nil)
+		if err != nil {
+			log.Fatalf("Error serving http at %v:%v : %v", ip, port, err)
+		}
 	}
 }
